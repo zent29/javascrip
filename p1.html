@@ -3,40 +3,126 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Acceso concedido</title>
-    <style>
-      body{font-family:system-ui, -apple-system, 'Segoe UI', Roboto, Arial;background:#eef2ff;margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
-      .box{background:white;padding:2rem;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,0.06);max-width:540px;text-align:center}
-      a{color:#2563eb;font-weight:600}
-    </style>
+    <title>Panel de ejemplo · Acceso</title>
+    <link rel="stylesheet" href="p1-style.css">
   </head>
   <body>
-    <main id="app">
-      <h1>Página mínima</h1>
-      <p id="welcome">Esta es una página HTML muy básica con poco contenido, lista para editar.</p>
-      <div style="margin-top:1rem">
-        <button id="logout" style="padding:0.5rem 0.75rem;border-radius:6px;border:0;background:#ef4444;color:white;">Cerrar sesión</button>
+    <div class="container">
+      <header class="site-header">
+        <div class="brand">
+          <div class="logo">JS</div>
+          <div>
+            <div class="site-title">Proyecto Ejemplo</div>
+            <div class="site-sub">Interfaz de demostración</div>
+          </div>
+        </div>
+        <div>
+          <button id="logout" class="btn ghost">Cerrar sesión</button>
+        </div>
+      </header>
+
+      <div class="layout">
+        <main>
+          <section class="card hero">
+            <h1 id="main-title">Bienvenido</h1>
+            <p id="welcome">Esta es una página HTML con ejemplos de sección, tarjetas y un formulario. Edita y prueba libremente.</p>
+            <div class="actions">
+              <button class="btn">Comenzar</button>
+              <button class="btn secondary">Ver demo</button>
+            </div>
+          </section>
+
+          <section style="margin-top:1rem" class="cards-grid">
+            <div class="info-card card">
+              <h3>Actividad reciente</h3>
+              <p class="muted">Últimas acciones en tu cuenta y notificaciones principales.</p>
+            </div>
+            <div class="info-card card">
+              <h3>Estadísticas</h3>
+              <p class="muted">Usuarios, visitas y eventos simulados para mostrar cómo quedaría una vista real.</p>
+            </div>
+          </section>
+
+          <section style="margin-top:1rem" class="card">
+            <h2>Snippet de código</h2>
+            <p class="muted">Ejemplo de cómo mostrar información o un pequeño instructivo.</p>
+            <p class="code">&lt;script&gt;console.log('Hola mundo')&lt;/script&gt;</p>
+          </section>
+
+          <footer class="site-footer">Archivo: <code class="code">p1.html</code></footer>
+        </main>
+
+        <aside class="sidebar">
+          <div class="card">
+            <div class="profile">
+              <div class="avatar">U</div>
+              <div>
+                <div class="name" id="profile-name">Usuario</div>
+                <div class="email" id="profile-email">user@example.com</div>
+              </div>
+            </div>
+
+            <div class="small-list">
+              <a href="#">Mi perfil <span class="muted">Editar</span></a>
+              <a href="#">Ajustes <span class="muted">Privacidad</span></a>
+              <a href="#">Ayuda <span class="muted">Docs</span></a>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:1rem">
+            <h3>Contacto</h3>
+            <form class="contact-form" id="contactForm">
+              <input type="text" id="name" placeholder="Tu nombre" />
+              <input type="email" id="email" placeholder="Correo" />
+              <textarea id="message" placeholder="Mensaje (solo demo)"></textarea>
+              <div style="display:flex;gap:.5rem;margin-top:.5rem">
+                <button type="submit" class="btn">Enviar</button>
+                <button type="button" class="btn ghost" id="clear">Limpiar</button>
+              </div>
+            </form>
+          </div>
+        </aside>
       </div>
-      <footer style="margin-top:1rem">Archivo: <code>p1.html</code></footer>
-    </main>
+    </div>
     <!-- Incluir el módulo de autenticación compartido -->
     <script src="auth.js"></script>
     <script>
       // Requerir autenticación al cargar la página
-      // Auth.requireAuth() redirige al login si no hay sesión
-      if(Auth.requireAuth()){
-        // Si está autenticado, obtener el usuario y mostrarlo en el DOM
+      if(typeof Auth !== 'undefined' && Auth.requireAuth()){
         const user = Auth.getUser();
         const welcome = document.getElementById('welcome');
-        if(welcome) welcome.textContent = `Bienvenido, ${user}. Esta es una página mínima.`;
+        const profileName = document.getElementById('profile-name');
+        const profileEmail = document.getElementById('profile-email');
+        if(welcome) welcome.textContent = `Bienvenido, ${user}. Explora el panel de ejemplo.`;
+        if(profileName) profileName.textContent = user;
+        if(profileEmail) profileEmail.textContent = user.toLowerCase().replaceAll(' ','') + '@example.com';
       }
 
-      // Vincular el botón 'Cerrar sesión' para llamar a Auth.logout()
-      document.getElementById('logout').addEventListener('click', function(){
-        // Borrar la sesión del almacenamiento y redirigir al login con ?logged=0
-        Auth.logout();
-        window.location.href = 'login.html?logged=0';
-      });
+      // Manejar logout (si Auth está definido)
+      const logoutBtn = document.getElementById('logout');
+      if(logoutBtn){
+        logoutBtn.addEventListener('click', function(){
+          if(typeof Auth !== 'undefined') Auth.logout();
+          window.location.href = 'login.html?logged=0';
+        });
+      }
+
+      // Form demo: prevenir envío real y mostrar resumen
+      const form = document.getElementById('contactForm');
+      if(form){
+        form.addEventListener('submit', function(e){
+          e.preventDefault();
+          const data = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            message: document.getElementById('message').value,
+          };
+          alert('Demo — datos enviados:\n' + JSON.stringify(data, null, 2));
+        });
+        document.getElementById('clear').addEventListener('click', function(){
+          form.reset();
+        });
+      }
     </script>
   </body>
 </html>
