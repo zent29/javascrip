@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Acceso concedido</title>
+    <style>
+      body{font-family:system-ui, -apple-system, 'Segoe UI', Roboto, Arial;background:#eef2ff;margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
+      .box{background:white;padding:2rem;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,0.06);max-width:540px;text-align:center}
+      a{color:#2563eb;font-weight:600}
+    </style>
+  </head>
+  <body>
+    <main id="app">
+      <h1>Página mínima</h1>
+      <p id="welcome">Esta es una página HTML muy básica con poco contenido, lista para editar.</p>
+      <div style="margin-top:1rem">
+        <button id="logout" style="padding:0.5rem 0.75rem;border-radius:6px;border:0;background:#ef4444;color:white;">Cerrar sesión</button>
+      </div>
+      <footer style="margin-top:1rem">Archivo: <code>p1.html</code></footer>
+    </main>
+    <!-- Incluir el módulo de autenticación compartido -->
+    <script src="auth.js"></script>
+    <script>
+      // Requerir autenticación al cargar la página
+      // Auth.requireAuth() redirige al login si no hay sesión
+      if(Auth.requireAuth()){
+        // Si está autenticado, obtener el usuario y mostrarlo en el DOM
+        const user = Auth.getUser();
+        const welcome = document.getElementById('welcome');
+        if(welcome) welcome.textContent = `Bienvenido, ${user}. Esta es una página mínima.`;
+      }
+
+      // Vincular el botón 'Cerrar sesión' para llamar a Auth.logout()
+      document.getElementById('logout').addEventListener('click', function(){
+        // Borrar la sesión del almacenamiento y redirigir al login con ?logged=0
+        Auth.logout();
+        window.location.href = 'login.html?logged=0';
+      });
+    </script>
+  </body>
+</html>
