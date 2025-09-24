@@ -5,30 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Login</title>
     <style>
-      body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial; background:#f3f4f6; margin:0; padding:2rem; display:flex; align-items:center; justify-content:center; min-height:100vh; }
-      .card { background:white; padding:1.5rem; border-radius:8px; box-shadow:0 6px 20px rgba(0,0,0,0.06); width:320px; }
-      label{display:block;margin-bottom:0.25rem;font-weight:600}
-      input{width:100%;padding:0.5rem;margin-bottom:0.75rem;border:1px solid #ddd;border-radius:6px}
-      button{width:100%;padding:0.6rem;border:0;border-radius:6px;background:#2563eb;color:white;font-weight:600}
+      /* Reseteo mínimo y tipografía */
+      body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial; background:#e9e7ea; margin:0; padding:2rem; display:flex; align-items:center; justify-content:center; min-height:100vh; }
+
+      /* Tarjeta centrada con borde redondeado similar a la imagen */
+      .card { background:#fff; padding:2rem; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.08); width:360px; }
+      .card-title { text-align:center; margin:0 0 1.25rem 0; font-size:1.25rem; }
+
+      /* Estilos de campos con icono dentro */
+      .form .field { position:relative; display:flex; align-items:center; margin-bottom:0.9rem; }
+      .form .field .icon { display:inline-flex; align-items:center; justify-content:center; width:44px; height:40px; background:#f3f4f6; border-radius:8px; margin-right:0.5rem; font-size:18px }
+      .form .field input { flex:1; padding:0.6rem; border:1px solid #e2e2e2; border-radius:8px; background:transparent; }
+      .form .field input::placeholder { color:#9ca3af }
+      .form .field .eye { margin-left:0.5rem; border:0;background:transparent; cursor:pointer }
+
+      /* Botón grande similar al diseño */
+      .big-btn { width:100%; padding:0.85rem; border-radius:8px; border:0; background:linear-gradient(#d1d5db,#e5e7eb); font-weight:700; color:#111; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
+
+      .small { text-align:center; font-size:0.85rem; color:#6b7280; margin-top:0.85rem }
+
       .error{color:#b91c1c;margin-bottom:0.5rem}
     </style>
   </head>
   <body>
     <div class="card">
-      <h2 style="margin:0 0 1rem 0">Iniciar sesión</h2>
-      <div id="error" class="error" aria-live="polite" style="display:none"></div>
-      <form id="loginForm">
-        <label for="user">Usuario</label>
-        <input id="user" name="user" autocomplete="username" required />
-        <label for="pass">Contraseña</label>
-        <input id="pass" name="pass" type="password" autocomplete="current-password" required />
-        <button type="submit">Entrar</button>
+      <!-- Título grande centrado similar al diseño mostrado -->
+      <h2 class="card-title">Registro de Usuario</h2>
+
+      <!-- Contenedor de formulario con iconos dentro de los inputs -->
+      <form id="loginForm" class="form">
+        <div id="error" class="error" aria-live="polite" style="display:none"></div>
+
+        <div class="field">
+          <span class="icon">👤</span>
+          <input id="user" name="user" placeholder="Usuario" autocomplete="username" required />
+        </div>
+
+        <div class="field">
+          <span class="icon">✉️</span>
+          <input id="email" name="email" placeholder="Correo Electrónico" />
+        </div>
+
+        <div class="field">
+          <span class="icon">🔒</span>
+          <input id="pass" name="pass" type="password" placeholder="Contraseña" autocomplete="current-password" required />
+          <button type="button" id="togglePass" class="eye" aria-label="Mostrar contraseña">◷</button>
+        </div>
+
+        <button type="submit" class="big-btn">REGISTRARSE</button>
+
+        <p class="small">¿Ya tienes cuenta? <a href="#">¡Inicia sesión aquí!</a></p>
       </form>
     </div>
 
     <!-- Incluir el módulo de autenticación centralizado -->
     <script src="auth.js"></script>
     <script>
+      // Toggle de visibilidad de contraseña (mejora UI)
+      document.addEventListener('click', function(e){
+        if(e.target && e.target.id === 'togglePass'){
+          const pass = document.getElementById('pass');
+          if(pass.type === 'password') pass.type = 'text'; else pass.type = 'password';
+        }
+      });
+
       // Obtener referencias a elementos del DOM
       const form = document.getElementById('loginForm');
       const errorDiv = document.getElementById('error');
